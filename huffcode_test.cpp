@@ -25,8 +25,7 @@
 
 // Additional includes for this test program
 #include <string>       // for std::string
-#include <unordered_map>
-// for std::unordered_map
+#include <unordered_map>// for std::unordered_map
 #include <vector>       // for std::vector
 #include <sstream>      // for std::ostringstream
 
@@ -50,10 +49,10 @@
 //     0 <= countPasses_ <= countTests_.
 //     tolerance_ >= 0.
 class Tester {
-   
+
    // ***** Tester: ctors, dctor, op= *****
 public:
-   
+
    // Default ctor
    // Sets countTests_, countPasses_ to zero, tolerance_ to given value
    // Pre: None.
@@ -65,12 +64,12 @@ public:
    countPasses_(0),
    tolerance_(theTolerance >= 0 ? theTolerance : -theTolerance)
    {}
-   
+
    // Compiler-generated copy ctor, copy op=, dctor are used
-   
+
    // ***** Tester: general public functions *****
 public:
-   
+
    // test
    // Handles single test, param indicates pass/fail
    // Pre: None.
@@ -86,7 +85,7 @@ public:
    {
       ++countTests_;
       if (success) ++countPasses_;
-      
+
       std::cout << "    ";
       if (testName != "")
       {
@@ -97,7 +96,7 @@ public:
       std::cout << (success ? "passed" : "********** FAILED **********")
       << std::endl;
    }
-   
+
    // ftest
    // Does single floating-point test.
    // Tests passes iff difference of first two values is <= tolerance.
@@ -985,8 +984,8 @@ int main()
    std::cout << std::endl;
    
    // Wait for user
-   std::cout << "Press ENTER to quit ";
-   while (std::cin.get() != '\n') ;
+   //std::cout << "Press ENTER to quit ";
+   //while (std::cin.get() != '\n') ;
    
    return 0;
 }
