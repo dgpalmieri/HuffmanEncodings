@@ -15,22 +15,40 @@
 using std::string;
 #include <unordered_map>
 using std::unordered_map;
+#include<memory>
+using std::shared_ptr;
+using std::make_shared;
 
+// Node Class
+// For generating Huffman Codes
+template< typename ValType >
+class Node {
+    public:
+        ValType            _data;
+        shared_ptr< Node > _leftChild;
+        shared_ptr< Node > _rightChild;
 
-void HuffCode::setWeights(const unordered_map<char, int> & theweights)
+        explicit Node( const ValType & data, shared_ptr< Node > lc = nullptr,
+                                             shared_ptr< Node > rc = nullptr )
+            : _data(data), _leftChild(lc), _rightChild(rc) {}
+
+        ~Node() = default;
+};
+
+void HuffCode::setWeights( const unordered_map< char, int > & theweights )
 {
     if( theweights.empty() )
-        break;
+        return;
 }
 
 
-string HuffCode::encode(const string & text) const
+string HuffCode::encode( const string & text ) const
 {
     return "";  // DUMMY RETURN
 }
 
 
-string HuffCode::decode(const string & codestr) const
+string HuffCode::decode( const string & codestr ) const
 {
     return "";  // DUMMY RETURN
 }
