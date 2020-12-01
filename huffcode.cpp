@@ -21,6 +21,7 @@ using std::make_shared;
 
 // Node Class
 // For generating Huffman Codes
+// Based on the LLNode2 class by G.G. Chappell
 template< typename ValType >
 class Node {
     public:
@@ -28,12 +29,16 @@ class Node {
         shared_ptr< Node > _leftChild;
         shared_ptr< Node > _rightChild;
 
+        // 1, 2, or 3 parameter constructor
+        // Strong Guarantee
+        // Exception neutral
         explicit Node( const ValType & data, shared_ptr< Node > lc = nullptr,
                                              shared_ptr< Node > rc = nullptr )
             : _data(data), _leftChild(lc), _rightChild(rc) {}
 
         ~Node() = default;
 };
+
 
 void HuffCode::setWeights( const unordered_map< char, int > & theweights )
 {
