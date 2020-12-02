@@ -18,6 +18,9 @@ using std::unordered_map;
 #include<memory>
 using std::shared_ptr;
 using std::make_shared;
+#include<utility>
+using std::pair;
+using std::make_pair;
 
 // Node Class
 // For generating Huffman Codes
@@ -26,6 +29,7 @@ template< typename ValType >
 class Node {
     public:
         ValType            _data;
+        int                _weight;
         shared_ptr< Node > _leftChild;
         shared_ptr< Node > _rightChild;
 
@@ -44,17 +48,26 @@ void HuffCode::setWeights( const unordered_map< char, int > & theweights )
 {
     if( theweights.empty() )
         return;
+
+    for( const auto & value: theweights )
+        _pqueue.push( make_pair( value.second, value.first ) );
 }
 
 
 string HuffCode::encode( const string & text ) const
 {
+    if( text.empty() )
+        return "";
+
     return "";  // DUMMY RETURN
 }
 
 
 string HuffCode::decode( const string & codestr ) const
 {
+    if( codestr.empty() )
+        return "";
+
     return "";  // DUMMY RETURN
 }
 

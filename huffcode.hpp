@@ -15,6 +15,9 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
+#include <queue>
+#include <utility>
 
 // Class HuffCode
 // Encoding & decoding using a Huffman code
@@ -36,6 +39,10 @@ public:
 
 // ***** HuffCode: data members *****
 private:
+
+    std::priority_queue< std::pair<int, char>,
+                         std::vector< std::pair< int, char > >,
+                         std::greater< std::pair< int, char > > > _pqueue;
 
 };  // End class HuffCode
 
