@@ -111,7 +111,7 @@ public:
               double val2,
               const std::string & testName = "")
    { test(val1-val2 <= tolerance_ && val2-val1 <= tolerance_, testName); }
-   
+
    // reset
    // Resets *this to default constructed state
    // Pre: None.
@@ -123,7 +123,7 @@ public:
       countTests_ = 0;
       countPasses_ = 0;
    }
-   
+
    // numTests
    // Returns the number of tests that have been done since last reset
    // Pre: None.
@@ -132,7 +132,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    int numTests() const
    { return countTests_; }
-   
+
    // numPassed
    // Returns the number of tests that have passed since last reset
    // Pre: None.
@@ -141,7 +141,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    int numPassed() const
    { return countPasses_; }
-   
+
    // numFailed
    // Returns the number of tests that have not passed since last reset
    // Pre: None.
@@ -150,7 +150,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    int numFailed() const
    { return countTests_ - countPasses_; }
-   
+
    // allPassed
    // Returns true if all tests since last reset have passed
    // Pre: None.
@@ -159,7 +159,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    bool allPassed() const
    { return countPasses_ == countTests_; }
-   
+
    // setTolerance
    // Sets tolerance_ to given value
    // Pre: None.
@@ -168,14 +168,14 @@ public:
    // Does not throw (No-Throw Guarantee)
    void setTolerance(double theTolerance)
    { tolerance_ = (theTolerance >= 0 ? theTolerance : -theTolerance); }
-   
+
    // ***** Tester: data members *****
 private:
-   
+
    int countTests_;    // Number of tests done since last reset
    int countPasses_;   // Number of tests passed since last reset
    double tolerance_;  // Tolerance for floating-point near-equality tests
-   
+
 };  // end class Tester
 
 
@@ -197,22 +197,22 @@ private:
 // Requirements on Types: None.
 template<typename T>
 class TypeCheck {
-   
+
 private:
-   
+
    // Uncopyable class. Do not define copy ctor, copy assn.
    TypeCheck(const TypeCheck &);
    TypeCheck<T> & operator=(const TypeCheck &);
-   
+
    // Compiler-generated dctor is used (but irrelevant).
-   
+
 public:
-   
+
    // check
    // The function and function template below simulate a single function
    // that takes a single parameter, and returns true iff the parameter has
    // type T or (const T).
-   
+
    // check (reference-to-const T)
    // Pre: None.
    // Post:
@@ -220,7 +220,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    static bool check(const T & param)
    { return true; }
-   
+
    // check (reference-to-const non-T)
    // Pre: None.
    // Post:
@@ -230,7 +230,7 @@ public:
    template <typename OtherType>
    static bool check(const OtherType & param)
    { return false; }
-   
+
 };  // End class TypeCheck
 
 
@@ -265,10 +265,10 @@ public:
 //     Counter::maxExisting_ is (similarly) highest value existing_ has
 //      assumed.
 class Counter {
-   
+
    // ***** Counter: Ctors, dctor, op= *****
 public:
-   
+
    // Default ctor
    // Pre: None.
    // Post:
@@ -282,7 +282,7 @@ public:
          maxExisting_ = existing_;
       ++ctorCount_;
    }
-   
+
    // Copy ctor
    // Throws std::runtime_error if copyThrow_.
    // Pre: None.
@@ -300,7 +300,7 @@ public:
          maxExisting_ = existing_;
       ++ctorCount_;
    }
-   
+
    // Copy assignment
    // Throws std::runtime_error if copyThrow_.
    // Pre: None.
@@ -316,7 +316,7 @@ public:
       ++assnCount_;
       return *this;
    }
-   
+
    // Dctor
    // Pre: None.
    // Post:
@@ -328,10 +328,10 @@ public:
       --existing_;
       ++dctorCount_;
    }
-   
+
    // ***** Counter: Functions dealing with count *****
 public:
-   
+
    // reset
    // Pre: None.
    // Post:
@@ -349,7 +349,7 @@ public:
       assnCount_ = 0;
       copyThrow_ = shouldThrow;
    }
-   
+
    // getExisting
    // Pre: None.
    // Post:
@@ -357,7 +357,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    static int getExisting()
    { return existing_; }
-   
+
    // getMaxExisting
    // Pre: None.
    // Post:
@@ -365,7 +365,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    static int getMaxExisting()
    { return maxExisting_; }
-   
+
    // getCtorCount
    // Pre: None.
    // Post:
@@ -373,7 +373,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    static int getCtorCount()
    { return ctorCount_; }
-   
+
    // getDctorCount
    // Pre: None.
    // Post:
@@ -381,7 +381,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    static int getDctorCount()
    { return dctorCount_; }
-   
+
    // getAssnCount
    // Pre: None.
    // Post:
@@ -389,7 +389,7 @@ public:
    // Does not throw (No-Throw Guarantee)
    static int getAssnCount()
    { return assnCount_; }
-   
+
    // setCopyThrow
    // Pre: None.
    // Post:
@@ -397,17 +397,17 @@ public:
    // Does not throw (No-Throw Guarantee)
    static void setCopyThrow(bool shouldThrow)
    { copyThrow_ = shouldThrow; }
-   
+
    // ***** Counter: Data Members *****
 private:
-   
+
    static int existing_;     // # of existing objects
    static int maxExisting_;  // Max # of existing objects
    static int ctorCount_;    // # of successful (non-throwing) ctor calls
    static int dctorCount_;   // # of dctor calls
    static int assnCount_;    // # of successful (non-throwing) copy = calls
    static bool copyThrow_;   // true if copy operations (ctor, =) throw
-   
+
 };  // End class Counter
 
 // Definition of static data member of class Counter
@@ -445,20 +445,20 @@ bool matchPattern(const std::string & pattern,
    size_t len = pattern.size();
    if (len != coded.size())
       return false;
-   
+
    std::unordered_map<char, char> m;
    for (size_t i = 0; i != len; ++i)
    {
       char tc = coded[i];
       if (tc != '0' && tc != '1')
          return false;
-      
+
       char pc = pattern[i];
       bool islower =  (pc >= 'a');
       char pcupper = islower ? char(pc - 'a' + 'A') : pc;
-      
+
       char tcbase = islower ? char('1'-(tc-'0')) : tc;
-      
+
       if (m.find(pcupper) != m.end())
       {
          if (tcbase != m[pcupper])
@@ -489,17 +489,17 @@ void test_HuffCode_types(Tester & t)
 {
    std::cout << "Test Suite: class HuffCode - type checking"
    << std::endl;
-   
+
    HuffCode h;
    const std::unordered_map<char, int> cw;
    h.setWeights(cw);
    const HuffCode & ch(h);
-   
+
    // Return type of encode
    const std::string s = "";
    t.test(TypeCheck<std::string>::check(ch.encode(s)),
           "Return type of encode is string");
-   
+
    // Return type of decode
    t.test(TypeCheck<std::string>::check(ch.decode("")),
           "Return type of decode is string");
@@ -517,7 +517,7 @@ void test_HuffCode_simple(Tester & t)
 {
    std::cout << "Test Suite: class HuffCode - simple code"
    << std::endl;
-   
+
    HuffCode h;
    std::unordered_map<char, int> w;
    w['a'] = 3;
@@ -525,10 +525,10 @@ void test_HuffCode_simple(Tester & t)
    w['c'] = 1;
    const std::unordered_map<char, int> & cw(w);
    h.setWeights(cw);
-   
+
    std::string text, retval, pat, correct;
    bool result;
-   
+
    // Encode empty text
    text = "";
    retval = h.encode(text);
@@ -542,7 +542,7 @@ void test_HuffCode_simple(Tester & t)
       std::cout << "        "
       << "Received:  \"" << retval << "\"" << std::endl;
    }
-   
+
    // Encode all characters
    text = "abc";
    retval = h.encode(text);
@@ -560,12 +560,12 @@ void test_HuffCode_simple(Tester & t)
       << "EXITING TEST SUITE" << std::endl;
       return;
    }
-   
+
    std::vector<std::string> cwd;
    cwd.push_back(retval.substr(0, 1));
    cwd.push_back(retval.substr(1, 2));
    cwd.push_back(retval.substr(3, 2));
-   
+
    // Encode single characters
    for (size_t i = 0; i != cwd.size(); ++i)
    {
@@ -584,7 +584,7 @@ void test_HuffCode_simple(Tester & t)
          << "Received:  \"" << retval << "\"" << std::endl;
       }
    }
-   
+
    // Encode longer text
    text = "aaabacbabbbccacbcc";
    retval = h.encode(text);
@@ -600,7 +600,7 @@ void test_HuffCode_simple(Tester & t)
       std::cout << "        "
       << "Received:  \"" << retval << "\"" << std::endl;
    }
-   
+
    // Decode empty text
    text = "";
    retval = h.decode(text);
@@ -614,7 +614,7 @@ void test_HuffCode_simple(Tester & t)
       std::cout << "        "
       << "Received:  \"" << retval << "\"" << std::endl;
    }
-   
+
    // Decode single characters
    for (size_t i = 0; i != cwd.size(); ++i)
    {
@@ -633,7 +633,7 @@ void test_HuffCode_simple(Tester & t)
          << "Received:  \"" << retval << "\"" << std::endl;
       }
    }
-   
+
    // Decode longer text
    text = cwd[0]+cwd[1]+cwd[2]+cwd[0]+cwd[2]+cwd[1]
    +cwd[1]+cwd[0]+cwd[2]+cwd[1]+cwd[2]+cwd[0]
@@ -663,16 +663,16 @@ void test_HuffCode_single(Tester & t)
 {
    std::cout << "Test Suite: class HuffCode - single letter"
    << std::endl;
-   
+
    HuffCode h;
    std::unordered_map<char, int> w;
    w['a'] = 3;
    const std::unordered_map<char, int> & cw(w);
    h.setWeights(cw);
-   
+
    std::string text, retval, pat, correct;
    bool result;
-   
+
    // Encode empty text
    text = "";
    retval = h.encode(text);
@@ -686,7 +686,7 @@ void test_HuffCode_single(Tester & t)
       std::cout << "        "
       << "Received:  \"" << retval << "\"" << std::endl;
    }
-   
+
    // Encode the character
    text = "a";
    retval = h.encode(text);
@@ -705,7 +705,7 @@ void test_HuffCode_single(Tester & t)
       return;
    }
    std::string cwd = retval;
-   
+
    // Encode longer text
    text = "aaaa";
    retval = h.encode(text);
@@ -719,7 +719,7 @@ void test_HuffCode_single(Tester & t)
       std::cout << "        "
       << "Received:  \"" << retval << "\"" << std::endl;
    }
-   
+
    // Decode empty text
    text = "";
    retval = h.decode(text);
@@ -733,7 +733,7 @@ void test_HuffCode_single(Tester & t)
       std::cout << "        "
       << "Received:  \"" << retval << "\"" << std::endl;
    }
-   
+
 }
 
 
@@ -748,7 +748,7 @@ void test_HuffCode_complex(Tester & t)
 {
    std::cout << "Test Suite: class HuffCode - complex code"
    << std::endl;
-   
+
    HuffCode h;
    std::unordered_map<char, int> w;
    w['a'] = 2;
@@ -762,17 +762,17 @@ void test_HuffCode_complex(Tester & t)
    w['i'] = 7;
    w['j'] = 5;
    h.setWeights(w);
-   
+
    std::string text, retval, pat, correct;
    bool result;
-   
+
    // Encode empty text
    text = "";
    retval = h.encode(text);
    correct = "";
    result = (retval == correct);
    t.test(result, "encode empty text");
-   
+
    // Encode all characters
    text = "abcdefghij";
    retval = h.encode(text);
@@ -785,7 +785,7 @@ void test_HuffCode_complex(Tester & t)
       << "EXITING TEST SUITE" << std::endl;
       return;
    }
-   
+
    std::vector<std::string> cwd;
    cwd.push_back(retval.substr(0, 5));
    cwd.push_back(retval.substr(5, 2));
@@ -797,7 +797,7 @@ void test_HuffCode_complex(Tester & t)
    cwd.push_back(retval.substr(24, 5));
    cwd.push_back(retval.substr(29, 3));
    cwd.push_back(retval.substr(32, 4));
-   
+
    // Encode single characters
    for (size_t i = 0; i != cwd.size(); ++i)
    {
@@ -809,7 +809,7 @@ void test_HuffCode_complex(Tester & t)
       os1 << i+1;
       t.test(result, "encode single-character text #" + os1.str());
    }
-   
+
    // Encode longer text
    text = "ajabcffhcdihgjihgfedcba";
    retval = h.encode(text);
@@ -818,14 +818,14 @@ void test_HuffCode_complex(Tester & t)
    +cwd[6]+cwd[5]+cwd[4]+cwd[3]+cwd[2]+cwd[1]+cwd[0];
    result = (retval == correct);
    t.test(result, "encode longer text");
-   
+
    // Decode empty text
    text = "";
    retval = h.decode(text);
    correct = "";
    result = (retval == correct);
    t.test(result, "decode empty text");
-   
+
    // Decode single characters
    for (size_t i = 0; i != cwd.size(); ++i)
    {
@@ -844,7 +844,7 @@ void test_HuffCode_complex(Tester & t)
          << "Received:  \"" << retval << "\"" << std::endl;
       }
    }
-   
+
    // Decode longer text
    text = cwd[6]+cwd[9]+cwd[0]+cwd[8]+cwd[9]+cwd[9]+cwd[3]+cwd[3]+cwd[3]
    +cwd[4]+cwd[8]+cwd[9]+cwd[2]+cwd[6]+cwd[1]+cwd[7]+cwd[4]+cwd[0]
@@ -867,7 +867,7 @@ void test_HuffCode_copy(Tester & t)
 {
    std::cout << "Test Suite: class HuffCode - copying HuffCode object"
    << std::endl;
-   
+
    HuffCode h;
    std::unordered_map<char, int> w;
    w['a'] = 3;
@@ -875,10 +875,10 @@ void test_HuffCode_copy(Tester & t)
    w['c'] = 1;
    h.setWeights(w);
    const HuffCode ch(h);
-   
+
    std::string text, retval, pat, correct;
    bool result;
-   
+
    // Encode all characters
    text = "abc";
    retval = ch.encode(text);
@@ -896,12 +896,12 @@ void test_HuffCode_copy(Tester & t)
       << "EXITING TEST SUITE" << std::endl;
       return;
    }
-   
+
    std::vector<std::string> cwd;
    cwd.push_back(retval.substr(0, 1));
    cwd.push_back(retval.substr(1, 2));
    cwd.push_back(retval.substr(3, 2));
-   
+
    // Encode text
    text = "aaabacbabbbccacbcc";
    retval = ch.encode(text);
@@ -917,7 +917,7 @@ void test_HuffCode_copy(Tester & t)
       std::cout << "        "
       << "Received:  \"" << retval << "\"" << std::endl;
    }
-   
+
    // Decode text
    text = cwd[0]+cwd[1]+cwd[2]+cwd[0]+cwd[2]+cwd[1]
    +cwd[1]+cwd[0]+cwd[2]+cwd[1]+cwd[2]+cwd[0]
@@ -969,7 +969,7 @@ int main()
 {
    Tester t;
    test_class_HuffCode(t);
-   
+
    std::cout << std::endl;
    if (t.allPassed())
    {
@@ -982,11 +982,11 @@ int main()
       << std::endl;
    }
    std::cout << std::endl;
-   
+
    // Wait for user
    //std::cout << "Press ENTER to quit ";
    //while (std::cin.get() != '\n') ;
-   
+
    return 0;
 }
 
