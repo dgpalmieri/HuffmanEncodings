@@ -22,6 +22,7 @@ using std::make_shared;
 using std::pair;
 using std::make_pair;
 
+
 // Node Class
 // For generating Huffman Codes
 // Based on the LLNode2 class by G.G. Chappell
@@ -36,12 +37,47 @@ class Node {
         // 1, 2, or 3 parameter constructor
         // Strong Guarantee
         // Exception neutral
-        explicit Node( const ValType & data, shared_ptr< Node > lc = nullptr,
+        explicit Node( const ValType & data, const int & weight,
+                                             shared_ptr< Node > lc = nullptr,
                                              shared_ptr< Node > rc = nullptr )
             : _data(data), _leftChild(lc), _rightChild(rc) {}
 
         ~Node() = default;
 };
+
+
+void generateTree( Node< char > & head,
+                   std::priority_queue< std::pair<int, char>,
+                       std::vector< std::pair< int, char > >,
+                       std::greater< std::pair< int, char > > > pq ){
+
+    while( !pq.empty() ){
+        auto top = pq.top();
+
+        if( head._leftChild == nullptr ){
+            head._leftChild = make_shared< Node< char > >
+                              ( Node< char >(top.second, top.first) );
+            pq.pop();
+            continue;
+        }
+
+        if ( head._rightChild == nullptr ){
+            head._rightChild = make_shared< Node< char > >
+                               ( Node< char >(top.second, top.first) );
+            pq.pop();
+            continue;
+        }
+
+        /*
+         *auto nextChild = make_shared< Node< char > >( Node< char >(top.second,
+         *                                                           top.first) );
+         */
+        head._leftChild = make_shared< Node< char > >( Node< char >
+                                     ( 0, 0, head._leftChild ) );
+
+        pq.pop();
+    }
+}
 
 
 void HuffCode::setWeights( const unordered_map< char, int > & theweights )
@@ -59,6 +95,10 @@ string HuffCode::encode( const string & text ) const
     if( text.empty() )
         return "";
 
+    Node< char > head( 0, 0 );
+
+    generateTree( head, _pqueue );
+
     return "";  // DUMMY RETURN
 }
 
@@ -67,6 +107,10 @@ string HuffCode::decode( const string & codestr ) const
 {
     if( codestr.empty() )
         return "";
+
+    Node< char > head( 0, 0 );
+
+    generateTree( head, _pqueue );
 
     return "";  // DUMMY RETURN
 }
