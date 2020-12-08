@@ -28,30 +28,9 @@ using std::make_pair;
 using std::cout;
 using std::endl;
 
-// Node Class
-// For generating Huffman Codes
-// Based on the LLNode2 class by G.G. Chappell
-template< typename ValType >
-class Node {
-    public:
-        ValType            _data;
-        int                _weight;
-        shared_ptr< Node > _leftChild;
-        shared_ptr< Node > _rightChild;
-
-        // 1, 2, or 3 parameter constructor
-        // Strong Guarantee
-        // Exception neutral
-        explicit Node( const ValType & data, const int & weight,
-                                             shared_ptr< Node > lc = nullptr,
-                                             shared_ptr< Node > rc = nullptr )
-            : _data(data), _leftChild(lc), _rightChild(rc) { }
-
-        ~Node() = default;
-};
 
 // TODO remove this
-void printBT(const std::string& prefix, const shared_ptr<Node< char >> & node, bool isLeft)
+void printBT(const std::string& prefix, const shared_ptr<Node> & node, bool isLeft)
 {
     if( node != nullptr )
     {
@@ -69,44 +48,32 @@ void printBT(const std::string& prefix, const shared_ptr<Node< char >> & node, b
 }
 
 // TODO remove this
-void printBT(const shared_ptr<Node<char>> node)
+void printBT(const shared_ptr<Node> node)
 {
     printBT("", node, false);
 }
 
 
-void generateTree( shared_ptr< Node< char > > & head,
-                   std::priority_queue< std::pair<int, char>,
-                       std::vector< std::pair< int, char > >,
-                       std::greater< std::pair< int, char > > > pq ) {
+void generateTree( shared_ptr< Node > & head,
+                   std::priority_queue< shared_ptr< Node >,
+                       std::vector< shared_ptr< Node > >,
+                       Compare > pq ) {
 
-    while( !pq.empty() ){
-        auto top = pq.top();
+    while( pq.size() != 1){
+        auto first = pq.top();
+        pq.pop();
+        auto second = pq.top();
+        pq.pop();
 
-        if( head->_leftChild == nullptr ){
-            head->_leftChild = make_shared< Node< char > >
-                              ( Node< char >(top.second, top.first) );
-            pq.pop();
-            continue;
-        }
+        auto newNode = make_shared< Node >( Node( 0,
+                                            first->_weight + second->_weight,
+                                            first, second ) );
 
-        if ( head->_rightChild == nullptr ){
-            head->_rightChild = make_shared< Node< char > >
-                               ( Node< char >(top.second, top.first) );
-            pq.pop();
-            continue;
-        }
-
-        int leftWeight = head->_leftChild ?
-                         head->_leftChild->_weight : 0;
-
-        int rightWeight = head->_rightChild ?
-                          head->_rightChild->_weight : 0;
-
-        head = make_shared< Node< char > >( Node< char >
-                        ( 0, leftWeight + rightWeight, head ) );
-
+        pq.push( newNode );
     }
+
+    head = pq.top();
+
 }
 
 
@@ -114,8 +81,46 @@ void HuffCode::setWeights( const unordered_map< char, int > & theweights ) {
     if( theweights.empty() )
         return;
 
-    for( const auto & value: theweights )
-        _pqueue.push( make_pair( value.second, value.first ) );
+    for( const auto & value: theweights ){
+        //cout << "data: " << value.first << " weight: " << value.second << endl;
+        auto newNode = make_shared< Node >( Node( value.first, value.second ) );
+        _pqueue.push( newNode );
+    }
+}
+
+string HuffCode::traverse_recursive( const shared_ptr< Node > & head,
+                                     const char & data, bool & found ) const {
+
+    // BASE CASE
+    if ( head->_data == data ){
+        //cout << "found " << data << endl;
+        found = true;
+        return "";
+    }
+
+    string ret = "";
+    // RECURSIVE CASE
+    if ( !found && head->_leftChild != nullptr ){
+        //cout << "left" << endl;
+        ret.append( "0" );
+        auto left = traverse_recursive( head->_leftChild, data, found );
+        if ( found )
+            ret += left;
+    }
+
+    if ( !found && head->_rightChild != nullptr ){
+        //cout << "right" << endl;
+        ret.pop_back();
+        ret.append( "1" );
+        auto right = traverse_recursive( head->_rightChild, data, found );
+        if ( found )
+            ret += right;
+    }
+
+    if ( !found )
+        ret.pop_back();
+
+    return ret;
 }
 
 
@@ -123,34 +128,32 @@ string HuffCode::encode( const string & text ) const {
     if( text.empty() )
         return "";
 
-    auto head = make_shared< Node< char > >( Node< char >( 0, 0 ) );
+    auto head = make_shared< Node >( Node( 0, 0 ) );
 
     generateTree( head, _pqueue );
+    printBT(head);
 
     string total = "";
+    bool found = false;
+    std::unordered_map< char, string > memo;
+
     for ( const auto & character : text ) {
         auto tempHead(head);
+        auto memoFind = memo.find( character );
+        string temp = "";
 
-        while( true ){
-            if ( tempHead->_rightChild &&
-                 tempHead->_rightChild->_data == character ) {
-                total += "1";
-                break;
-            }
-            else if ( tempHead->_leftChild &&
-                      tempHead->_leftChild->_data == character ) {
-                total += "0";
-                break;
-            }
-            else {
-                total += "0";
-                if ( tempHead->_leftChild ){
-                    tempHead = tempHead->_leftChild ;
-                }
-                else {
-                    break; }
-            }
+        if ( head->_data == character)
+            temp.append("0");
+        else if ( memoFind == memo.end() ){
+            temp = traverse_recursive( tempHead, character, found );
+            memo[ character ] = temp;
         }
+        else
+            temp = memo[ character ];
+
+        //cout << character << ": " << temp << endl;
+        total += temp;
+        found = false;
     }
 
     return total;
@@ -162,7 +165,7 @@ string HuffCode::decode( const string & codestr ) const
     if( codestr.empty() )
         return "";
 
-    auto head = make_shared< Node< char > >( Node< char >( 0, 0 ) );
+    auto head = make_shared< Node >( Node( 0, 0 ) );
 
     generateTree( head, _pqueue );
 
@@ -170,20 +173,23 @@ string HuffCode::decode( const string & codestr ) const
     auto tempHead = head;
     for ( const char & character : codestr ){
         if ( character == '0' ) {
-            if ( tempHead->_leftChild != nullptr ){
+            if ( tempHead->_leftChild != nullptr )
                 tempHead = tempHead->_leftChild;
-                if ( tempHead->_leftChild == nullptr ) {
-                    ret += tempHead->_data;
-                    tempHead = head;
-                }
+            if ( tempHead->_leftChild == nullptr ) {
+                ret += tempHead->_data;
+                tempHead = head;
             }
         }
         else if ( character == '1' ) {
-            ret += tempHead->_rightChild->_data;
-            tempHead = head;
+            if ( tempHead->_rightChild != nullptr )
+                tempHead = tempHead->_rightChild;
+            if ( tempHead->_rightChild == nullptr ) {
+                ret += tempHead->_data;
+                tempHead = head;
+            }
         }
     }
 
-    return ret;  // DUMMY RETURN
+    return ret;
 }
 
