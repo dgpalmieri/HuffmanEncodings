@@ -18,6 +18,47 @@
 #include <vector>
 #include <queue>
 #include <utility>
+#include <memory>
+
+// Node Class
+// For generating Huffman Codes
+// Based on the LLNode2 class by G.G. Chappell
+class Node {
+    public:
+        char                    _data;
+        int                     _weight;
+        std::shared_ptr< Node > _leftChild;
+        std::shared_ptr< Node > _rightChild;
+
+        // 1, 2, or 3 parameter constructor
+        // Strong Guarantee
+        // Exception neutral
+        explicit Node( const char & data, const int & weight,
+                       std::shared_ptr< Node > lc = nullptr,
+                       std::shared_ptr< Node > rc = nullptr )
+            : _data(data), _leftChild(lc), _rightChild(rc) { }
+
+        ~Node() = default;
+
+        bool operator<( const Node & a ) const {
+            if( this->_weight != a._weight)
+                return this->_weight < a._weight;
+            else
+                return this->_data < a._data;
+        }
+
+}; // End class Node
+
+// Class Compare
+// Provides a comparison function for shared_ptr< Node >
+class Compare {
+    public:
+        bool operator() ( std::shared_ptr<Node> a, std::shared_ptr<Node> b ) {
+            if (a != nullptr && b != nullptr)
+                return *a < *b;
+            return true;
+        }
+}; // End class Compare
 
 // Class HuffCode
 // Encoding & decoding using a Huffman code
@@ -40,9 +81,11 @@ public:
 // ***** HuffCode: data members *****
 private:
 
-    std::priority_queue< std::pair< int, char >,
-                         std::vector< std::pair< int, char > >,
-                         std::greater< std::pair< int, char > > > _pqueue;
+    std::string traverse_recursive( const std::shared_ptr< Node > &,
+                                    const char &, bool & ) const;
+
+    std::priority_queue< std::shared_ptr< Node >,
+                         std::vector< std::shared_ptr< Node > >, Compare > _pqueue;
 
 };  // End class HuffCode
 
