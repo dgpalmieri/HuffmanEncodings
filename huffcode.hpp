@@ -30,21 +30,21 @@ class Node {
         std::shared_ptr< Node > _leftChild;
         std::shared_ptr< Node > _rightChild;
 
-        // 1, 2, or 3 parameter constructor
+        // 2, 3, or 4 parameter constructor
         // Strong Guarantee
         // Exception neutral
         explicit Node( const char & data, const int & weight,
                        std::shared_ptr< Node > lc = nullptr,
                        std::shared_ptr< Node > rc = nullptr )
-            : _data(data), _leftChild(lc), _rightChild(rc) { }
+            : _data(data), _weight(weight), _leftChild(lc), _rightChild(rc) { }
 
         ~Node() = default;
 
-        bool operator<( const Node & a ) const {
+        bool operator>( const Node & a ) const {
             if( this->_weight != a._weight)
-                return this->_weight < a._weight;
+                return this->_weight > a._weight;
             else
-                return this->_data < a._data;
+                return this->_data > a._data;
         }
 
 }; // End class Node
@@ -55,8 +55,8 @@ class Compare {
     public:
         bool operator() ( std::shared_ptr<Node> a, std::shared_ptr<Node> b ) {
             if (a != nullptr && b != nullptr)
-                return *a < *b;
-            return true;
+                return *a > *b;
+            return false;
         }
 }; // End class Compare
 
