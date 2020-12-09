@@ -11,47 +11,20 @@
 // For CS 411 Fall 2017
 
 #include "huffcode.hpp"  // for class HuffCode declaration
+
 #include <string>
 using std::string;
-using std::to_string;
+
 #include <unordered_map>
 using std::unordered_map;
+
 #include<memory>
 using std::shared_ptr;
 using std::make_shared;
-#include<utility>
-using std::pair;
-using std::make_pair;
-#include<algorithm>
 
-#include<iostream> // TODO remove these
-using std::cout;
-using std::endl;
+#include<queue>
 
-
-// TODO remove this
-void printBT(const std::string& prefix, const shared_ptr<Node> & node, bool isLeft)
-{
-    if( node != nullptr )
-    {
-        std::cout << prefix;
-
-        std::cout << (isLeft ? "├──" : "└──" );
-
-        // print the value of the node
-        std::cout << node->_data << std::endl;
-
-        // enter the next tree level - left and right branch
-        printBT( prefix + (isLeft ? "│   " : "    "), node->_leftChild, true);
-        printBT( prefix + (isLeft ? "│   " : "    "), node->_rightChild, false);
-    }
-}
-
-// TODO remove this
-void printBT(const shared_ptr<Node> node)
-{
-    printBT("", node, false);
-}
+#include<vector>
 
 
 void generateTree( shared_ptr< Node > & head,
@@ -82,7 +55,6 @@ void HuffCode::setWeights( const unordered_map< char, int > & theweights ) {
         return;
 
     for( const auto & value: theweights ){
-        //cout << "data: " << value.first << " weight: " << value.second << endl;
         auto newNode = make_shared< Node >( Node( value.first, value.second ) );
         _pqueue.push( newNode );
     }
@@ -93,7 +65,6 @@ string HuffCode::traverse_recursive( const shared_ptr< Node > & head,
 
     // BASE CASE
     if ( head->_data == data ){
-        //cout << "found " << data << endl;
         found = true;
         return "";
     }
@@ -101,7 +72,6 @@ string HuffCode::traverse_recursive( const shared_ptr< Node > & head,
     string ret = "";
     // RECURSIVE CASE
     if ( !found && head->_leftChild != nullptr ){
-        //cout << "left" << endl;
         ret.append( "0" );
         auto left = traverse_recursive( head->_leftChild, data, found );
         if ( found )
@@ -109,7 +79,6 @@ string HuffCode::traverse_recursive( const shared_ptr< Node > & head,
     }
 
     if ( !found && head->_rightChild != nullptr ){
-        //cout << "right" << endl;
         ret.pop_back();
         ret.append( "1" );
         auto right = traverse_recursive( head->_rightChild, data, found );
@@ -131,7 +100,6 @@ string HuffCode::encode( const string & text ) const {
     auto head = make_shared< Node >( Node( 0, 0 ) );
 
     generateTree( head, _pqueue );
-    printBT(head);
 
     string total = "";
     bool found = false;
@@ -151,7 +119,6 @@ string HuffCode::encode( const string & text ) const {
         else
             temp = memo[ character ];
 
-        //cout << character << ": " << temp << endl;
         total += temp;
         found = false;
     }
@@ -192,4 +159,3 @@ string HuffCode::decode( const string & codestr ) const
 
     return ret;
 }
-
